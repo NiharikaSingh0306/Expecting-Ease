@@ -13,7 +13,7 @@ body {
   align-items: center;
   min-height: 100vh;
   background: #efbcd5;
-  background-image: url("");
+  background-image: url("familybg.png");
   width: 100%;
   overflow: hidden;
 }
