@@ -13,11 +13,8 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-image: url("basic\ bg.png");
-            background-size: cover;
-            background-position: center;
+            background-image: url("basic\ bg.png"); 
             color: rgb(79, 122, 196);
-            align-items: center;
         }
         h1 {
             text-align: center;
@@ -52,15 +49,14 @@
         }
         #appointment-text {
             width: 50%;
-            padding: 80px;
-            align-items: center;
-            font-size: 2em;
+            padding: 10px;
+            font-size: 1.2em;
         }
         #save-btn {
             background: #597fba;
-            color: rgb(206, 84, 192);
+            color: white;
             border: none;
-            padding: 80px 80px;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
@@ -77,7 +73,7 @@
     <!-- Calendar container -->
     <div id='calendar'></div>
 
-    <!-- Modal-like mood and appointment input form -->
+    <!-- Mood and appointment input form -->
     <div class="mood-selection" style="display: none;" id="moodForm">
         <h3>Select Mood for <span id="selected-date"></span></h3>
         <div class="emoji-container">
@@ -98,10 +94,9 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 
     <script>
-        let calendar; // Global calendar variable
-        let selectedDate; // To track which date was clicked
+        let calendar; 
+        let selectedDate; 
 
-        // Initialize FullCalendar
         document.addEventListener('DOMContentLoaded', function () {
             let calendarEl = document.getElementById('calendar');
             
@@ -111,45 +106,51 @@
                 dateClick: function (info) {
                     selectedDate = info.dateStr;
                     document.getElementById('selected-date').textContent = selectedDate;
-                    document.getElementById('moodForm').style.display = 'block'; // Show form
+                    document.getElementById('moodForm').style.display = 'block';
                 },
-                events: [] // We'll add events dynamically
+                events: [] 
             });
 
             calendar.render();
         });
 
-        // Set the mood when an emoji is clicked
         function setMood(mood) {
             document.getElementById('selected-mood').value = mood;
             alert(`Mood set: ${mood}`);
         }
 
-        // Save the mood and appointment as an event
         function saveEvent() {
             const mood = document.getElementById('selected-mood').value;
             const appointment = document.getElementById('appointment-text').value;
 
-            // Check if the mood or appointment is set
             if (!mood && !appointment) {
                 alert('Please set a mood or an appointment.');
                 return;
             }
 
-            // Create event title combining mood and appointment
             const eventTitle = `Mood: ${mood ? mood : 'N/A'}, Appointment: ${appointment ? appointment : 'None'}`;
 
-            // Add the event to FullCalendar
             calendar.addEvent({
                 title: eventTitle,
                 start: selectedDate,
                 allDay: true
             });
 
-            // Clear the form
+            const eventData = {
+                mood: mood || 'N/A',
+                appointment: appointment || 'None',
+                date: selectedDate
+            };
+
+            const savedEvents = JSON.parse(localStorage.getItem('events')) || [];
+            savedEvents.push(eventData);
+            localStorage.setItem('events', JSON.stringify(savedEvents));
+
             document.getElementById('selected-mood').value = '';
             document.getElementById('appointment-text').value = '';
-            document.getElementById('moodForm').style.display = 'none'; // Hide form
+            document.getElementById('moodForm').style.display = 'none';
+
+            alert('Event saved!');
         }
     </script>
 
